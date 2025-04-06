@@ -35,7 +35,7 @@ def load_user(user_id):
     return None
 
 def get_db_connection():
-    return psycopg2.connect(database="music", user="postgres", password="123", host="localhost", port="5432")
+    return psycopg2.connect(database="kisprod", user="postgres", password="elmore", host="localhost", port="5432")
 
 @app.route('/')
 def index():
@@ -117,6 +117,8 @@ def upload_file():
     if file and file.filename.endswith('.mp3'):
         filename = secure_filename(file.filename)
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        file.save(filepath)
+        
         # Process the audio file
         text = model_convert_audio_to_text(filepath)
         status = 'approved' if moderate_text(text) else 'rejected'
@@ -154,4 +156,4 @@ def view_file(file_id):
     return render_template('file.html', file=file_data)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True) 
